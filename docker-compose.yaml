@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  sqlserver:
+    # Usamos la imagen oficial de SQL Server para Linux (última versión 2019)
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    restart: always
+    ports:
+      # Mapeamos el puerto 1433 (puerto por defecto de SQL Server) del contenedor al mismo puerto en el host.
+      - "1433:1433"
+    environment:
+      # Variable obligatoria para aceptar la licencia de uso
+      ACCEPT_EULA: "Y"
+      # Variable para la contraseña del usuario administrador (SA). Debe cumplir con los requisitos de complejidad:
+      # mínimo 8 caracteres, con mayúscula, minúscula, número y carácter especial.
+      SA_PASSWORD: "${SA_PASSWORD}"
+      # (Opcional) Selecciona la edición de SQL Server. En este caso se utiliza la edición Express.
+      MSSQL_PID: "Express"
+    container_name: sqlserver
+    volumes:
+      # Mapea el directorio local ./sqlserver a la ubicación de los datos persistentes de SQL Server.
+      - ./sqlserver:/var/opt/mssql
+
+# Comando para iniciar el servicio:
+#   docker-compose up -d
